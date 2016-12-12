@@ -19,7 +19,7 @@ Instructions on How to Download & Run the project:
 4. For better Visualizarion effects, view the timeline visualization by reducing the screen Zoom to 75% 
 5.	Run the File matrix.html on your server.
 Video:
-The video has been uploaded to the Google drive location: 
+The video has been uploaded to the Google drive location: https://drive.google.com/open?id=0ByzOVrLfu6edMTROdVZqOWR1OUU
 Website of the Project:
 http://mfranc31.people.uic.edu/Project3/matrix_3.html
  
