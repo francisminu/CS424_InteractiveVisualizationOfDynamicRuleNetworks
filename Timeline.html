@@ -1,0 +1,933 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+<style>
+	.line {
+  fill: none;
+  stroke: steelblue;
+  stroke-width: 2px;
+}
+</style></head>
+<body>
+    <script src="http://d3js.org/d3.v4.min.js"></script>
+    <script src="http://d3js.org/topojson.v0.min.js"></script>
+ <select id="seltime" multiple="true">
+ <option id="1" value="0-10">0-10</option>
+ <option id="2" value="2-12">2-12</option>
+ <option id="3" value="4-14">4-14</option>
+ <option id="1" value="6-16">6-16</option>
+ <option id="2" value="8-18">8-18</option>
+ <option id="3" value="10-20">10-20</option>
+ <option id="1" value="12-22">12-22</option>
+ <option id="2" value="14-24">14-24</option>
+ <option id="3" value="16-26">16-26</option>
+ <option id="1" value="18-28">18-28</option>
+ <option id="2" value="20-30">20-30</option>
+ <option id="3" value="22-32">22-32</option>
+ <option id="3" value="24-34">24-34</option>
+ <option id="1" value="26-36">26-36</option>
+ <option id="2" value="28-38">28-38</option>
+ <option id="3" value="30-40">30-40</option>
+ <option id="1" value="32-42">32-42</option>
+ <option id="2" value="34-44">34-44</option>
+ <option id="3" value="36-46">36-46</option>
+ <option id="1" value="38-48">38-48</option>
+ <option id="2" value="40-50">40-50</option>
+ <option id="3" value="42-52">42-52</option>
+ <option id="1" value="44-54">44-54</option>
+ <option id="2" value="46-56">46-56</option>
+ <option id="3" value="48-58">48-58</option>
+ <option id="1" value="50-60">50-60</option>
+ <option id="2" value="52-62">52-62</option>
+ <option id="3" value="54-64">54-64</option>
+ <option id="1" value="56-66">56-66</option>
+ <option id="2" value="58-68">58-68</option>
+ <option id="3" value="60-70">60-70</option>
+ <option id="1" value="62-72">62-72</option>
+ <option id="2" value="64-74">64-74</option>
+ <option id="3" value="66-76">66-76</option>
+ <option id="3" value="68-78">68-78</option>
+ <option id="1" value="70-80">70-80</option>
+ </select>
+ <button onclick="displaytime()"> Select </button>
+<script>
+var coordinates=[];
+var width = 14000, height = 800;
+/*var xcoord1=80;
+var xcoord2=330;*/
+var xcoord1=80;
+var xcoord2=330;
+var svg=d3.select("body").append("svg").attr("width",width).attr("height",height);
+var filenames=[];
+var fileindex=0;
+
+var timeOut;
+files=[];
+j=0;
+for(i=0;i<=35;i++)
+{
+	files[""+j]=i;
+	j=j+2;
+}
+var rulesClicked = [];
+var rulesClickedArrayLength;
+var ruleClickStatus = 0;
+var animationDuration=1000, delay = 500;
+
+for(k=0;k<=35;k++)
+{
+	filenames.push("flux_"+k);
+}
+textcoordhor=[];
+var initialhor=5;
+for(var i=0;i<=20;i++)
+{
+	temp=[];
+	temp.push(initialhor);
+	temp.push(70+i*30);
+	textcoordhor.push(temp);
+}
+textcoordver=[];
+var initialver=30;
+var initialx1=xcoord1;
+var initialx2=xcoord2;
+var start=0;
+var end=10;
+for(var i=1;i<37;i++)
+{
+	temp=[];
+	temp.push(initialx1);
+	temp.push(initialver);
+	temp.push(start);
+	textcoordver.push(temp);
+	temp=[];
+	temp.push(initialx2);
+	temp.push(initialver);
+	temp.push(end);
+	textcoordver.push(temp);
+	initialx1=initialx1+380;
+	initialx2=initialx1+250;
+	start=start+2;
+	end=end+2;
+}
+/*svg.selectAll(".time")
+.data(textcoordver)
+.enter()
+.append("text")
+.attr("class","time")
+.attr("x",function(d){ return d[0]+"px";})
+.attr("y",function(d){ return d[1]+"px";})
+.text(function(d){ return d[2] ;})
+.attr("font-family", "sans-serif")
+.attr("font-size", "20px")
+.attr("fill", "black");*/
+
+
+
+readdata();
+var rowVals = [];
+function readdata()
+{
+	//console.log("in readdata"+fileindex);
+	if(fileindex<=35)
+	{
+		d3.json(filenames[fileindex]+".json",function(error,data)
+		{
+			display(data,xcoord1,xcoord2);
+		}
+		);
+
+	}
+		
+}
+
+svg.append("rect")
+	.attr("id","borderRect")
+    .attr("width", width)
+    .attr("height", height)
+    .attr("fill", "black")  //#e5f5f9
+	.attr("stroke-width","5px")
+	.attr("stroke","black");
+	//.attr("transform","translate(10,5)");	
+
+var rulesArray;
+var arrayCounter = 0;
+var rows=[];
+
+function display(data,xcoord3,xcoord4){
+		rulesClicked = [];
+	
+		starttime=data.bioBeginTime.toFixed();
+		//console.log(starttime);
+		endtime=data.bioEndTime.toFixed();
+		//console.log(endtime);
+		var g=svg.append("g");
+		var ruleslen=data.rules.length;
+		rulesClickedArrayLength = ruleslen;
+		for(var i = 0; i < rulesClickedArrayLength; i++) {
+			rulesClicked.push(0);
+		}
+		//console.log(rulesClicked);
+		rulesArray = data.rules;
+		if(arrayCounter == 0)
+		{
+			drawRulesText(rulesArray);
+			arrayCounter++;
+		}
+		
+		var rowVals = [];
+		//var columns=[];
+		var ycoord=50;
+		for(i=0;i<ruleslen;i++)
+		{
+			
+			
+			rows.push(i);
+			rows.push(xcoord3);
+			rows.push(ycoord+i*30);
+			rowVals.push(rows);
+			//columns.push(i);
+		}
+		//console.log(rowVals);
+		svg.selectAll(".rules"+xcoord3)
+			.data(textcoordhor)
+			.enter()
+			.append("text")
+			.attr("class","rules"+xcoord3)
+			.attr("x",function(d){ return (xcoord3-75)+"px";})
+			.attr("y",function(d){ return d[1]+"px";})
+			.text(function(d,i){ 
+				//return "Rule:"+(i+1);
+				return rulesArray[i];
+				})
+			.attr("font-family", "sans-serif")
+			.attr("font-size", "20px")
+			.attr("fill", "white");
+
+		svg.selectAll(".rect"+xcoord3)
+		   .data(rows).enter()
+		   .append("rect")
+		   .attr("id",function(index){
+		   	return "rect"+index.toString()+xcoord3.toString();})
+		   .attr("class","rect"+xcoord3)
+		   .attr("fill","#2b83ba")
+		   .attr("x", function (index){ return xcoord3 + "px"; })
+		   .attr("y", function(index){ return ycoord+index*30 + "px";})
+		   .attr("width", 15 + "px")
+		   .attr("height", 20 + "px")
+		   //.on("mouseover",ruleOver)
+		   //.on("mouseout",ruleOut)
+		   .on("click",ruleClick);
+		   
+
+		svg.selectAll(".rect"+xcoord4)
+		   .data(rows).enter()
+		   .append("rect")
+		   .attr("id",function(index){ //console.log(index.toString()+xcoord4
+		   	//.toString());
+		   	return "rect"+index.toString()+xcoord4.toString();})
+		   .attr("class","rect"+xcoord4)
+		   .attr("fill","#2b83ba")
+		   .attr("x", function (index){ return xcoord4 + "px"; })
+		   .attr("y", function(index){ return ycoord+index*30 + "px";})
+		   .attr("width", 15 + "px")
+		   .attr("height", 20 + "px");
+		
+		var fluxes=data.fluxs;
+		//console.log("xccord3"+xcoord3);
+		//console.log("xccord4"+xcoord4);
+		positives=[];
+		negatives=[];
+		positiveinfluence=[];
+		negativeinfluence=[];
+		for(i=0;i<fluxes.length;i++)
+		{
+			for(j=0;j<fluxes[i].length;j++)
+			{
+				coord=[];
+				if(fluxes[i][j]!=0)
+				{
+					var fluxData = fluxes[i][j];
+					var sourcex = xcoord3;
+					//console.log("in file"+fileindex+",sourcex"+sourcex);
+					var sourcey = d3.select("#rect"+i.toString()+xcoord3.toString()).attr('y');
+					sourcey = parseInt(sourcey.split("p")[0]);
+					//console.log("in file"+fileindex+",sourcey"+sourcey);
+					var targetx = xcoord4;
+					//console.log("in file"+fileindex+",targetx"+targetx);
+					var targety = d3.select("#rect"+j.toString()+xcoord4.toString()).attr('y');
+					targety = parseInt(targety.split("p")[0]);
+					//console.log("in file"+fileindex+",targety"+targety);
+					coord.push(sourcex);
+					coord.push(sourcey);
+					coord.push(fluxes[i][j]);
+					coord.push(i);
+					coord.push("#rect"+i.toString()+xcoord3.toString());
+					coord.push("#rect"+j.toString()+xcoord4.toString());
+					if(fluxes[i][j]<0)
+					{
+						negativevalues=[];
+						negativevalues.push(sourcex+40);
+						negativevalues.push(sourcey+40);
+						negativevalues.push(fluxes[i][j]);
+						negativeinfluence.push(negativevalues);
+					}
+					if(fluxes[i][j]>0)
+					{
+						positivevalues=[];
+						positivevalues.push(sourcex+40);
+						positivevalues.push(sourcey+40);
+						positivevalues.push(fluxes[i][j]);
+						positiveinfluence.push(positivevalues);
+					}	
+					if(fluxes[i][j]<0)
+					{
+						negative=[];
+						negative.push(coord);
+						coord=[];
+						coord.push(sourcex+40);
+						coord.push(sourcey+40);
+						coord.push(fluxes[i][j]);
+						coord.push(i);
+						coord.push("#rect"+i.toString()+xcoord3.toString());
+						coord.push("#rect"+j.toString()+xcoord4.toString());
+						negative.push(coord);
+						coord=[];
+						coord.push(targetx);
+						coord.push(targety);
+						coord.push(fluxes[i][j]);
+						coord.push(i);
+						coord.push("#rect"+i.toString()+xcoord3.toString());
+						coord.push("#rect"+j.toString()+xcoord4.toString());
+						negative.push(coord);
+						negatives.push(negative);
+					}	
+					if(fluxes[i][j]>0)
+					{
+						positive=[]
+						positive.push(coord);
+						coord=[];
+						coord.push(sourcex+40);
+						coord.push(sourcey+40);
+						coord.push(fluxes[i][j]);
+						coord.push(i);
+						coord.push("#rect"+i.toString()+xcoord3.toString());
+						coord.push("#rect"+j.toString()+xcoord4.toString());
+						positive.push(coord);
+						coord=[];
+						coord.push(targetx);
+						coord.push(targety);
+						coord.push(fluxes[i][j]);
+						coord.push(i);
+						coord.push("#rect"+i.toString()+xcoord3.toString());
+						coord.push("#rect"+j.toString()+xcoord4.toString());
+						positive.push(coord);
+						positives.push(positive);
+					}	
+				}	
+				
+			}
+		}	
+		//console.log(positiveinfluence);
+		//console.log(positives);
+		for(i=0;i<positives.length;i++)
+		{
+			data1=positives[i];
+			//console.log("positives Array");
+			svg.append("path")
+			
+		      .datum(positives[i])
+				.attr("class", "line")
+			  .style("opacity",0.6)
+		      .style("stroke", "green")
+		      .attr("id", 'tag') // assign ID
+		      .attr("d", d3.line()
+		                   .curve(d3.curveBasis)
+		                   .x(function(d) { return d[0]; })
+		                   .y(function(d) { return d[1]; })
+		               )
+			  .on("mouseover",edgeOver)
+			  .on("mouseout",edgeOut)
+			  
+					   .append("svg:title")
+			.text(function(d,k){ return d[k][2];});
+         
+		}
+		
+		
+		//console.log(negatives);
+		for(i=0;i<negatives.length;i++)
+		{
+			data2=negatives[i];
+			//console.log("Negatives Array");
+			svg.append("path")
+		      .datum(negatives[i])
+		      .attr("class", "line")
+			  .style("opacity",0.6)
+		      .style("stroke", "red")
+		      .attr("id", 'tag') // assign ID
+		      .attr("d", d3.line()
+		                   .curve(d3.curveBasis)
+		                   .x(function(d) { return d[0]; })
+		                   .y(function(d) { return d[1]; })
+		               )
+		    .on("mouseover",edgeOver)
+			  .on("mouseout",edgeOut)
+			.append("svg:title")
+			.text(function(d,k){ return d[k][2];});
+			
+		     /*.on("mouseover",function(d,i){
+			 svg.append("text")
+			 .data(negativeinfluence)
+			 .attr("x",function(d){console.log(d[0]);return d[0];}) 
+                 .attr("y", function(d){console.log(d[1]); return d[1];})
+                 .attr("id","t"+ i)
+                 //.text(function(d,i){ return d[2];})
+				 .text("minu")
+                 .attr("font-family", "sans-serif")
+                 .attr("font-size", "20px")
+                 .attr("fill","black")
+                 .attr("text-anchor","middle")
+
+            })
+       .on("mouseout",function(d,i){
+			d3.select("#t"+i).remove();
+            }) */  
+		}
+		
+		
+		if(fileindex<35)
+		{	
+			//console.log("in filenames"+fileindex);
+			xcoord1=xcoord1+380;
+			xcoord2=xcoord1+250;
+			fileindex++;
+			readdata();
+		}
+}
+createAnimation();
+function drawRulesText(rulesArray)
+{
+	svg.selectAll(".rules")
+.data(textcoordhor)
+.enter()
+.append("text")
+.attr("class","rules")
+.attr("x",function(d){ return d[0]+"px";})
+.attr("y",function(d){ return d[1]+"px";})
+.text(function(d,i){ 
+//return "Rule:"+(i+1) ;	
+return rulesArray[i];
+})
+.attr("font-family", "sans-serif")
+.attr("font-size", "20px")
+.attr("fill", "black");
+}
+
+var checkCounter = 0;
+function edgeOver(d,i)
+{
+			var opac = d3.select(this).style("opacity");
+			if(opac != 0)
+			{
+				d3.select(d[0][4]).style("fill","blue");
+				d3.select(d[0][5]).style("fill","blue");
+				d3.select(this).style("stroke-width",20);
+				d3.select(this).style("opacity",1);
+			}
+			
+}
+
+function edgeOut(d)
+{
+		var opac = d3.select(this).style("opacity");
+		if(opac != 0)
+		{
+			d3.selectAll("rect").style("fill","#2b83ba");
+			d3.select("#borderRect").style("fill","black");
+			if(ruleClickStatus == 0)
+			{
+				d3.select(this).style("stroke-width",2);
+				
+			}
+			else
+			{
+				d3.select(this).style("stroke-width",5);
+				
+			}
+			d3.select(this).style("opacity",0.6);
+		}
+		
+}
+
+function ruleClick(d,i)
+{
+	//console.log(d);
+	ruleClickStatus = 1;
+	var xVal = d3.select(this).attr("x").split("p")[0];
+	var yVal = d3.select(this).attr("y").split("p")[0];
+		   
+	d3.selectAll("path").style("stroke-width",function(p){ 
+		   
+	
+	if((p[0][3] == d ))
+	{
+		rulesClicked[d] = 1;
+		return 5;
+	}
+	else
+	{
+		return d3.select(this).style("stroke-width");
+	}
+	});
+		   
+		   d3.selectAll("path").style("opacity",function(p){ 
+		   
+		   if((p[0][3] == d ))
+		   {
+				rulesClicked[d] = 1;
+				return 0.6;
+		   }
+		   else
+		   {
+				if(rulesClicked[p[0][3]] != 1)
+				{
+					return 0;
+				}
+				else
+				{
+					return 0.6;
+				}
+		   }
+		   
+		   });
+}
+
+function ruleOver(d,i) {
+
+		   //console.log(d);
+		   var xVal = d3.select(this).attr("x").split("p")[0];
+		   var yVal = d3.select(this).attr("y").split("p")[0];
+		   
+		   d3.selectAll("path").style("stroke-width",function(p){ 
+		   
+		   //if((p[0][0] == xVal) && (p[0][1] == yVal) )
+		   if((p[0][3] == d ))
+		   {
+				
+				return 5;
+		   }
+		   else
+		   {
+				return d3.select(this).style("stroke-width");
+		   }
+		   
+		   });
+		   
+		   d3.selectAll("path").style("opacity",function(p){ 
+		   
+		   if((p[0][3] == d ))
+		   {
+				return 0.6;
+		   }
+		   else
+		   {
+				return 0;
+		   }
+		   
+		   });
+		   
+		
+    }
+	
+function ruleOut(d)
+{
+		d3.selectAll("path").style("opacity",0.6);
+		d3.selectAll("path").style("stroke-width",2);
+}
+
+function createAnimation()
+{
+	var btnStartAnimation = d3.select('body').append('div')
+                         .attr('id', 'btnStartAnimation')
+                         .style('position', 'absolute')
+                         .style('opacity', 1)
+                         .style('background-color', '#023858').text('Start Animation') //#023858 #2b83ba
+						 .style("text-align","center")
+                         .style('width', '200px')
+                         .style("left", "700px")
+                         .style("top", "25px")
+                         .style('line-height', 1)
+                         .style('font-weight', 'bold')
+						 .style('font-size','22px')
+                         .style('padding', '3px')
+                         //.style('color', '#000')
+						 .style('color', 'white')
+                         .style('border-radius', '2px')
+                         .on("click", function () {
+                             startAnimation();
+                         })
+						 .on("mouseover", function(d){
+							d3.select(this).style("cursor","pointer");
+						 })
+						 .on("mouseout", function(d){
+							d3.select(this).style("cursor","default");
+						 });
+						 
+	var btnStopAnimation = d3.select('body').append('div')
+                         .attr('id', 'btnStopAnimation')
+                         .style('position', 'absolute')
+                         .style('opacity', 1)
+						 .style("text-align","center")
+                         .style('background-color', '#023858').text('Stop Animation')
+                         .style('width', '200px')
+                         .style("left", "1000px")
+                         .style("top", "25px")
+                         .style('line-height', 1)
+                         .style('font-weight', 'bold')
+						 .style('font-size','22px')
+                         .style('padding', '3px')
+                         .style('color', '#fff')
+                         .style('border-radius', '2px')
+                         .on("click", function () {
+                             stopAnimation();
+                         })
+						 .on("mouseover", function(d){
+							d3.select(this).style("cursor","pointer");
+						 })
+						 .on("mouseout", function(d){
+							d3.select(this).style("cursor","default");
+						 });
+}
+
+
+var dVal = 0;
+function startAnimation()
+{	
+	if(dVal < rulesClickedArrayLength)
+	{
+		ruleClickStatus = 1;
+		
+		
+		d3.selectAll("path").style("stroke-width",function(p){ 
+		   
+	
+		if((p[0][3] == dVal ))
+		{
+			rulesClicked[dVal] = 1;
+			return 5;
+		}
+		else
+		{
+			return d3.select(this).style("stroke-width");
+		}
+		});
+		   
+		   d3.selectAll("path").style("opacity",function(p){ 
+		   
+		   if((p[0][3] == dVal ))
+		   {
+				//rulesClicked[dVal] = 1;
+				return 0.6;
+		   }
+		   else
+		   {
+				return 0;
+		   }
+		   
+		   });
+		   dVal++;
+		   timeOut = setTimeout(startAnimation, animationDuration + delay);
+		   
+	}
+	if(dVal >= rulesClickedArrayLength)
+	{
+		dVal = 0;
+	}
+}
+
+function stopAnimation()
+{
+	dVal = 0;
+	clearTimeout(timeOut);
+	d3.selectAll("path").style("stroke-width",2); 
+	d3.selectAll("path").style("opacity",0.6); 
+}
+function displaytime()
+{
+	svg.selectAll("*").remove();
+	console.log(svg);
+	times=[];
+	filenames=[];
+	timefileindex=0;
+	timetextcoordhor=[];
+	var timeinitialhor=5;
+	for(var i=0;i<=20;i++)
+	{
+		temp=[];
+		temp.push(timeinitialhor);
+		temp.push(70+i*30);
+		timetextcoordhor.push(temp);
+	}
+	timetextcoordver=[];
+	var timeinitialver=30;
+	timexcoord1=80;
+	timexcoord2=330;
+	var timeinitialx1=timexcoord1;
+	var timeinitialx2=timexcoord2;
+	var start=0;
+	var end=10;
+	var sel=document.getElementById("seltime");
+	for(i=0;i<sel.length;i++)
+	{
+		if(sel[i].selected)
+		{
+			times.push(sel[i].value.split("-")[0]);
+		}
+	}
+	for(var i=1;i<=times.length;i++)
+	{
+		temp=[];
+		temp.push(timeinitialx1);
+		temp.push(timeinitialver);
+		temp.push(times[i-1]);
+		timetextcoordver.push(temp);
+		temp=[];
+		temp.push(timeinitialx2);
+		temp.push(timeinitialver);
+		temp.push(parseInt(times[i-1])+10);
+		timetextcoordver.push(temp);
+		timeinitialx1=timeinitialx1+380;
+		timeinitialx2=timeinitialx1+250;
+	}
+	console.log("func call");
+	displayaspertime(times);
+}
+function displayaspertime(times)
+{
+	console.log(times);
+	svg.selectAll(".rules")
+		.data(timetextcoordhor)
+		.enter()
+		.append("text")
+		.attr("class","rules")
+		.attr("x",function(d){ return d[0]+"px";})
+		.attr("y",function(d){ return d[1]+"px";})
+		.text(function(d,i){ return "Rule:"+(i+1) ;})
+		.attr("font-family", "sans-serif")
+		.attr("font-size", "20px")
+		.attr("fill", "black");
+
+	svg.selectAll(".time")
+		.data(timetextcoordver)
+		.enter()
+		.append("text")
+		.attr("class","time")
+		.attr("x",function(d){ return d[0]+"px";})
+		.attr("y",function(d){ return d[1]+"px";})
+		.text(function(d){ console.log("text"+d[2]);return d[2] ;})
+		.attr("font-family", "sans-serif")
+		.attr("font-size", "20px")
+		.attr("fill", "black");
+	
+	for(k=0;k<=35;k++)
+	{
+		filenames.push("flux_"+k);
+	}
+	readtimedata(times);
+}
+
+function readtimedata(times)
+{
+	if(timefileindex<times.length)
+	{
+		console.log("in readdata:"+timefileindex);
+		d3.json(filenames[files[times[timefileindex]]]+".json",function(error,data)
+		{
+			timedisplay(data,timexcoord1,timexcoord2);
+		}
+		);
+
+	}
+}
+function timedisplay(data,xcoord3,xcoord4)
+{
+		starttime=data.bioBeginTime.toFixed();
+		//console.log(starttime);
+		endtime=data.bioEndTime.toFixed();
+		//console.log(endtime);
+		var g=svg.append("g");
+		var ruleslen=data.rules.length;
+		var rows=[];
+		var columns=[];
+		var ycoord=50;
+		for(i=0;i<ruleslen;i++)
+		{
+			rows.push(i);
+			columns.push(i);
+		}
+		
+		svg.selectAll(".rect"+xcoord3)
+		   .data(rows).enter()
+		   .append("rect")
+		   .attr("id",function(index){ //console.log(index.toString()+xcoord3.toString());
+		   	return "rect"+index.toString()+xcoord3.toString();})
+		   .attr("class","rect"+xcoord3)
+		   .attr("fill","black")
+		   .attr("x", function (index){ return xcoord3 + "px"; })
+		   .attr("y", function(index){ return ycoord+index*30 + "px";})
+		   .attr("width", 15 + "px")
+		   .attr("height", 20 + "px");
+
+		svg.selectAll(".rect"+xcoord4)
+		   .data(rows).enter()
+		   .append("rect")
+		   .attr("id",function(index){ //console.log(index.toString()+xcoord4
+		   	//.toString());
+		   	return "rect"+index.toString()+xcoord4.toString();})
+		   .attr("class","rect"+xcoord4)
+		   .attr("fill","black")
+		   .attr("x", function (index){ return xcoord4 + "px"; })
+		   .attr("y", function(index){ return ycoord+index*30 + "px";})
+		   .attr("width", 15 + "px")
+		   .attr("height", 20 + "px");
+		
+		var fluxes=data.fluxs;
+		//console.log("xccord3"+xcoord3);
+		//console.log("xccord4"+xcoord4);
+		timepositives=[];
+		timenegatives=[];
+		timepositiveinfluence=[];
+		timenegativeinfluence=[];
+		for(i=0;i<fluxes.length;i++)
+		{
+			for(j=0;j<fluxes[i].length;j++)
+			{
+				coord=[];
+				if(fluxes[i][j]!=0)
+				{
+					var fluxData = fluxes[i][j]; 
+					var sourcex = xcoord3;
+					//console.log("in file"+timefileindex+",sourcex"+sourcex);
+					var sourcey = d3.select("#rect"+i.toString()+xcoord3.toString()).attr('y');
+					sourcey = parseInt(sourcey.split("p")[0]);
+					//console.log("in file"+timefileindex+",sourcey"+sourcey);
+					var targetx = xcoord4;
+					//console.log("in file"+timefileindex+",targetx"+targetx);
+					var targety = d3.select("#rect"+j.toString()+xcoord4.toString()).attr('y');
+					targety = parseInt(targety.split("p")[0]);
+					//console.log("in file"+timefileindex+",targety"+targety);
+					coord.push(sourcex);
+					coord.push(sourcey);
+					coord.push(fluxes[i][j]);
+					if(fluxes[i][j]<0)
+					{
+						negativevalues=[];
+						negativevalues.push(sourcex+40);
+						negativevalues.push(sourcey+40);
+						negativevalues.push(fluxes[i][j]);
+						timenegativeinfluence.push(negativevalues);
+					}
+					if(fluxes[i][j]>0)
+					{
+						timepositivevalues=[];
+						timepositivevalues.push(sourcex+40);
+						timepositivevalues.push(sourcey+40);
+						timepositivevalues.push(fluxes[i][j]);
+						timepositiveinfluence.push(timepositivevalues);
+					}	
+					if(fluxes[i][j]<0)
+					{
+						negative=[];
+						negative.push(coord);
+						coord=[];
+						coord.push(sourcex+40);
+						coord.push(sourcey+40);
+						coord.push(fluxes[i][j]);
+						negative.push(coord);
+						coord=[];
+						coord.push(targetx);
+						coord.push(targety);
+						coord.push(fluxes[i][j]);
+						negative.push(coord);
+						timenegatives.push(negative);
+					}	
+					if(fluxes[i][j]>0)
+					{
+						positive=[]
+						positive.push(coord);
+						coord=[];
+						coord.push(sourcex+40);
+						coord.push(sourcey+40);
+						coord.push(fluxes[i][j]);
+						positive.push(coord);
+						coord=[];
+						coord.push(targetx);
+						coord.push(targety);
+						coord.push(fluxes[i][j]);
+						positive.push(coord);
+						timepositives.push(positive);
+					}	
+				}	
+				
+			}
+		}	
+		//console.log(timepositiveinfluence);
+		//console.log(timepositives);
+		for(i=0;i<timepositives.length;i++)
+		{
+			data1=timepositives[i];
+			//console.log("timepositives Array");
+			svg.append("path")
+		      .datum(timepositives
+		      	[i])
+		      .attr("class", "line")
+		      .style("stroke", "green")
+		      .attr("id", 'tag') // assign ID
+		      .attr("d", d3.line()
+		                   .curve(d3.curveBasis)
+		                   .x(function(d) { return d[0]; })
+		                   .y(function(d) { return d[1]; })
+		               )
+					   .append("svg:title")
+			//.data(timepositiveinfluence)
+			.text(function(d,k){ return d[k][2];})
+       
+		}
+		
+		
+		//console.log(timenegatives);
+		for(i=0;i<timenegatives.length;i++)
+		{
+			data2=timenegatives[i];
+			//console.log("timenegatives Array");
+			svg.append("path")
+		      .datum(timenegatives[i])
+		      .attr("class", "line")
+		      .style("stroke", "red")
+		      .attr("id", 'tag') // assign ID
+		      .attr("d", d3.line()
+		                   .curve(d3.curveBasis)
+		                   .x(function(d) { return d[0]; })
+		                   .y(function(d) { return d[1]; })
+		               )
+			.append("svg:title")
+			.text(function(d,k){ return d[k][2];})
+		    
+		}
+		
+		
+		if(timefileindex<times.length-1)
+		{	
+			console.log("in filenames"+timefileindex);
+			timexcoord1=timexcoord1+380;
+			timexcoord2=timexcoord1+250;
+			timefileindex++;
+			readtimedata(times);
+		}
+}	
+
+</script>
+</body>
+</html>
