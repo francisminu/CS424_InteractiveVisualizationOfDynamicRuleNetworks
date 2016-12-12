@@ -3,62 +3,103 @@
 <head>
     <title></title>
 <style>
+
 	.line {
   fill: none;
   stroke: steelblue;
   stroke-width: 2px;
 }
-</style></head>
+.styledselect select {
+   background: url(down_arrow_select.jpg) no-repeat right #ddd;
+   width: 268px;
+   padding: 5px;
+   font-size: 16px;
+   line-height: 1;
+   border: 1px solid #000000;
+   border-radius: 0;
+   height: 75px;
+   -webkit-appearance: none;
+   }
+   .styled-select {
+   width: 240px;
+   height: 75px;
+   overflow: hidden;
+   background: url(down_arrow_select.jpg) no-repeat right #ddd;
+   border: 1px solid #000000;
+   }
+
+
+button {
+	border:2px solid #000000;
+    height:30px;
+    border:1px;
+    width:75px;
+    position:absolute;
+    transition: .5s ease;
+    top: 2.7%;
+    left: 25%;
+}
+</style>
+</head>
 <body>
     <script src="http://d3js.org/d3.v4.min.js"></script>
     <script src="http://d3js.org/topojson.v0.min.js"></script>
+	<div> <label for="text"> Choose the Time Slots to be Compared </label> 
+	<!--<button type="button" id="selectdropdown" onclick="displaytime()">Select </button> -->
+	</div>
+
+   <div class="styledselect">
  <select id="seltime" multiple="true">
- <option id="1" value="0-10">0-10</option>
- <option id="2" value="2-12">2-12</option>
- <option id="3" value="4-14">4-14</option>
- <option id="1" value="6-16">6-16</option>
- <option id="2" value="8-18">8-18</option>
- <option id="3" value="10-20">10-20</option>
- <option id="1" value="12-22">12-22</option>
- <option id="2" value="14-24">14-24</option>
- <option id="3" value="16-26">16-26</option>
- <option id="1" value="18-28">18-28</option>
- <option id="2" value="20-30">20-30</option>
- <option id="3" value="22-32">22-32</option>
- <option id="3" value="24-34">24-34</option>
- <option id="1" value="26-36">26-36</option>
- <option id="2" value="28-38">28-38</option>
- <option id="3" value="30-40">30-40</option>
- <option id="1" value="32-42">32-42</option>
- <option id="2" value="34-44">34-44</option>
- <option id="3" value="36-46">36-46</option>
- <option id="1" value="38-48">38-48</option>
- <option id="2" value="40-50">40-50</option>
- <option id="3" value="42-52">42-52</option>
- <option id="1" value="44-54">44-54</option>
- <option id="2" value="46-56">46-56</option>
- <option id="3" value="48-58">48-58</option>
- <option id="1" value="50-60">50-60</option>
- <option id="2" value="52-62">52-62</option>
- <option id="3" value="54-64">54-64</option>
- <option id="1" value="56-66">56-66</option>
- <option id="2" value="58-68">58-68</option>
- <option id="3" value="60-70">60-70</option>
- <option id="1" value="62-72">62-72</option>
- <option id="2" value="64-74">64-74</option>
- <option id="3" value="66-76">66-76</option>
- <option id="3" value="68-78">68-78</option>
- <option id="1" value="70-80">70-80</option>
+ <option id="1" value="0-10">0 - 10 sec</option>
+ <option id="2" value="2-12">2 - 12 sec</option>
+ <option id="3" value="4-14">4 - 14 sec</option>
+ <option id="1" value="6-16">6 - 16 sec</option>
+ <option id="2" value="8-18">8 - 18 sec</option>
+ <option id="3" value="10-20">10 - 20 sec</option>
+ <option id="1" value="12-22">12 - 22 sec</option>
+ <option id="2" value="14-24">14 - 24 sec</option>
+ <option id="3" value="16-26">16 - 26 sec</option>
+ <option id="1" value="18-28">18 - 28 sec</option>
+ <option id="2" value="20-30">20 - 30 sec</option>
+ <option id="3" value="22-32">22 - 32 sec</option>
+ <option id="3" value="24-34">24 - 34 sec</option>
+ <option id="1" value="26-36">26 - 36 sec</option>
+ <option id="2" value="28-38">28 - 38 sec</option>
+ <option id="3" value="30-40">30 - 40 sec</option>
+ <option id="1" value="32-42">32 - 42 sec</option>
+ <option id="2" value="34-44">34 - 44 sec</option>
+ <option id="3" value="36-46">36 - 46 sec</option>
+ <option id="1" value="38-48">38 - 48 sec</option>
+ <option id="2" value="40-50">40 - 50 sec</option>
+ <option id="3" value="42-52">42 - 52 sec</option>
+ <option id="1" value="44-54">44 - 54 sec</option>
+ <option id="2" value="46-56">46 - 56 sec</option>
+ <option id="3" value="48-58">48 - 58 sec</option>
+ <option id="1" value="50-60">50 - 60 sec</option>
+ <option id="2" value="52-62">52 - 62 sec</option>
+ <option id="3" value="54-64">54 - 64 sec</option>
+ <option id="1" value="56-66">56 - 66 sec</option>
+ <option id="2" value="58-68">58 - 68 sec</option>
+ <option id="3" value="60-70">60 - 70 sec</option>
+ <option id="1" value="62-72">62 - 72 sec</option>
+ <option id="2" value="64-74">64 - 74 sec</option>
+ <option id="3" value="66-76">66 - 76 sec</option>
+ <option id="3" value="68-78">68 - 78 sec</option>
+ <option id="1" value="70-80">70 - 80 sec</option>
  </select>
- <button onclick="displaytime()"> Select </button>
+</div>
+<div>
+	
+</div>
+
 <script>
 var coordinates=[];
-var width = 14000, height = 800;
+var width = 18000, height = 800;
 /*var xcoord1=80;
 var xcoord2=330;*/
-var xcoord1=80;
-var xcoord2=330;
-var svg=d3.select("body").append("svg").attr("width",width).attr("height",height);
+var xcoord1=200;
+var xcoord2=450;
+var svg=d3.select("body").append("svg").attr("width",width).attr("height",height).attr("transform","translate(0,30)");
 var filenames=[];
 var fileindex=0;
 
@@ -74,6 +115,39 @@ var rulesClicked = [];
 var rulesClickedArrayLength;
 var ruleClickStatus = 0;
 var animationDuration=1000, delay = 500;
+
+
+d3.select('body').append('div')
+                         .attr('id', 'btn')
+                         .style('position', 'absolute')
+                         .style('opacity', 1)
+                         .style('background-color', "#bdbdbd")
+						 .text('Select')
+                         .style("text-align","center")
+                         .style('width',"50px")
+                         .style('height',"15px")
+                         .style("left", "300px")
+                         .style("top","40px")
+                         .style('line-height', 1)
+                         .style("text-anchor", "middle").style('font-weight', 'bold')
+                         .style("font-size", "15px")
+                         .style("fill", "black")
+                         .style('font-weight', 'bold')
+                         .style('padding', '3px')
+                         .style('color', 'black')
+                         .on("click", function () {
+                         	//timetextcoordver=[];
+                         	textcoordver=[];
+                         	svg.selectAll('*').remove();
+                             svgremove();
+                         })
+                         .on("mouseover", function(d){
+                            d3.select(this).style("cursor","pointer");
+                         })
+                         .on("mouseout", function(d){
+                            d3.select(this).style("cursor","default");
+                         });
+
 
 for(k=0;k<=35;k++)
 {
@@ -106,22 +180,11 @@ for(var i=1;i<37;i++)
 	temp.push(initialver);
 	temp.push(end);
 	textcoordver.push(temp);
-	initialx1=initialx1+380;
+	initialx1=initialx1+480;
 	initialx2=initialx1+250;
 	start=start+2;
 	end=end+2;
 }
-/*svg.selectAll(".time")
-.data(textcoordver)
-.enter()
-.append("text")
-.attr("class","time")
-.attr("x",function(d){ return d[0]+"px";})
-.attr("y",function(d){ return d[1]+"px";})
-.text(function(d){ return d[2] ;})
-.attr("font-family", "sans-serif")
-.attr("font-size", "20px")
-.attr("fill", "black");*/
 
 
 
@@ -129,6 +192,7 @@ readdata();
 var rowVals = [];
 function readdata()
 {
+	
 	//console.log("in readdata"+fileindex);
 	if(fileindex<=35)
 	{
@@ -146,7 +210,7 @@ svg.append("rect")
 	.attr("id","borderRect")
     .attr("width", width)
     .attr("height", height)
-    .attr("fill", "black")  //#e5f5f9
+    .attr("fill", "#e5f5f9")  //#e5f5f9
 	.attr("stroke-width","5px")
 	.attr("stroke","black");
 	//.attr("transform","translate(10,5)");	
@@ -170,11 +234,7 @@ function display(data,xcoord3,xcoord4){
 		}
 		//console.log(rulesClicked);
 		rulesArray = data.rules;
-		if(arrayCounter == 0)
-		{
-			drawRulesText(rulesArray);
-			arrayCounter++;
-		}
+		
 		
 		var rowVals = [];
 		//var columns=[];
@@ -195,7 +255,7 @@ function display(data,xcoord3,xcoord4){
 			.enter()
 			.append("text")
 			.attr("class","rules"+xcoord3)
-			.attr("x",function(d){ return (xcoord3-75)+"px";})
+			.attr("x",function(d){ return (xcoord3-165+"px");})
 			.attr("y",function(d){ return d[1]+"px";})
 			.text(function(d,i){ 
 				//return "Rule:"+(i+1);
@@ -203,7 +263,7 @@ function display(data,xcoord3,xcoord4){
 				})
 			.attr("font-family", "sans-serif")
 			.attr("font-size", "20px")
-			.attr("fill", "white");
+			.attr("fill", "black");
 
 		svg.selectAll(".rect"+xcoord3)
 		   .data(rows).enter()
@@ -216,8 +276,6 @@ function display(data,xcoord3,xcoord4){
 		   .attr("y", function(index){ return ycoord+index*30 + "px";})
 		   .attr("width", 15 + "px")
 		   .attr("height", 20 + "px")
-		   //.on("mouseover",ruleOver)
-		   //.on("mouseout",ruleOut)
 		   .on("click",ruleClick);
 		   
 
@@ -233,6 +291,19 @@ function display(data,xcoord3,xcoord4){
 		   .attr("y", function(index){ return ycoord+index*30 + "px";})
 		   .attr("width", 15 + "px")
 		   .attr("height", 20 + "px");
+
+		   svg.selectAll(".time")
+			.data(textcoordver)
+			.enter()
+			.append("text")
+			.attr("class","time")
+			.attr("x",function(d){ return d[0]+"px";})
+			.attr("y",function(d){ return d[1]+"px";})
+			.text(function(d){ return d[2] ;})
+			.attr("font-family", "sans-serif")
+			.attr("font-size", "20px")
+			.attr("fill", "black");
+
 		
 		var fluxes=data.fluxs;
 		//console.log("xccord3"+xcoord3);
@@ -259,8 +330,8 @@ function display(data,xcoord3,xcoord4){
 					var targety = d3.select("#rect"+j.toString()+xcoord4.toString()).attr('y');
 					targety = parseInt(targety.split("p")[0]);
 					//console.log("in file"+fileindex+",targety"+targety);
-					coord.push(sourcex);
-					coord.push(sourcey);
+					coord.push(sourcex+15);
+					coord.push(sourcey+7.5);
 					coord.push(fluxes[i][j]);
 					coord.push(i);
 					coord.push("#rect"+i.toString()+xcoord3.toString());
@@ -351,7 +422,7 @@ function display(data,xcoord3,xcoord4){
 			  .on("mouseout",edgeOut)
 			  
 					   .append("svg:title")
-			.text(function(d,k){ return d[k][2];});
+			.text(function(d,k){ return "Value of Influence is : " + d[k][2];});
          
 		}
 		
@@ -375,7 +446,7 @@ function display(data,xcoord3,xcoord4){
 		    .on("mouseover",edgeOver)
 			  .on("mouseout",edgeOut)
 			.append("svg:title")
-			.text(function(d,k){ return d[k][2];});
+			.text(function(d,k){ return "Value of Influence is : " + d[k][2];});
 			
 		     /*.on("mouseover",function(d,i){
 			 svg.append("text")
@@ -400,7 +471,7 @@ function display(data,xcoord3,xcoord4){
 		if(fileindex<35)
 		{	
 			//console.log("in filenames"+fileindex);
-			xcoord1=xcoord1+380;
+			xcoord1=xcoord1+480;
 			xcoord2=xcoord1+250;
 			fileindex++;
 			readdata();
@@ -445,7 +516,7 @@ function edgeOut(d)
 		if(opac != 0)
 		{
 			d3.selectAll("rect").style("fill","#2b83ba");
-			d3.select("#borderRect").style("fill","black");
+			d3.select("#borderRect").style("fill","#e5f5f9");
 			if(ruleClickStatus == 0)
 			{
 				d3.select(this).style("stroke-width",2);
@@ -553,7 +624,7 @@ function createAnimation()
                          .attr('id', 'btnStartAnimation')
                          .style('position', 'absolute')
                          .style('opacity', 1)
-                         .style('background-color', '#023858').text('Start Animation') //#023858 #2b83ba
+                         .style('background-color', 'black').text('Start Animation') //#023858 #2b83ba
 						 .style("text-align","center")
                          .style('width', '200px')
                          .style("left", "700px")
@@ -564,7 +635,7 @@ function createAnimation()
                          .style('padding', '3px')
                          //.style('color', '#000')
 						 .style('color', 'white')
-                         .style('border-radius', '2px')
+                         //.style('border-radius', '2px')
                          .on("click", function () {
                              startAnimation();
                          })
@@ -580,7 +651,7 @@ function createAnimation()
                          .style('position', 'absolute')
                          .style('opacity', 1)
 						 .style("text-align","center")
-                         .style('background-color', '#023858').text('Stop Animation')
+                         .style('background-color', 'black').text('Stop Animation')
                          .style('width', '200px')
                          .style("left", "1000px")
                          .style("top", "25px")
@@ -588,10 +659,62 @@ function createAnimation()
                          .style('font-weight', 'bold')
 						 .style('font-size','22px')
                          .style('padding', '3px')
-                         .style('color', '#fff')
-                         .style('border-radius', '2px')
+                         .style('color', 'white')
+                         //.style('border-radius', '2px')
                          .on("click", function () {
                              stopAnimation();
+                         })
+						 .on("mouseover", function(d){
+							d3.select(this).style("cursor","pointer");
+						 })
+						 .on("mouseout", function(d){
+							d3.select(this).style("cursor","default");
+						 });
+						 
+	var btnReset = d3.select('body').append('div')
+                         .attr('id', 'btnReset')
+                         .style('position', 'absolute')
+                         .style('opacity', 1)
+						 .style("text-align","center")
+                         .style('background-color', '#bdbdbd').text('Reset')
+                         .style('width', '50px')
+						 .style("height","15px")
+                         .style("left", "300px")
+                         .style("top", "70px")
+                         .style('line-height', 1)
+                         .style('font-weight', 'bold')
+						 .style('font-size','15px')
+                         .style('padding', '3px')
+                         .style('color', 'black')
+                         //.style('border-radius', '2px')
+                         .on("click", function () {
+                             window.location = "\Timeline.html";
+                         })
+						 .on("mouseover", function(d){
+							d3.select(this).style("cursor","pointer");
+						 })
+						 .on("mouseout", function(d){
+							d3.select(this).style("cursor","default");
+						 });
+						 
+	var btnMatrixView = d3.select('body').append('div')
+                         .attr('id', 'btnMatrixView')
+                         .style('position', 'absolute')
+                         .style('opacity', 1)
+						 .style("text-align","center")
+                         .style('background-color', 'black').text('Back to Matrix View')
+                         .style('width', '250px')
+						 //.style("height","15px")
+                         .style("left", "1300px")
+                         .style("top", "25px")
+                         .style('line-height', 1)
+                         .style('font-weight', 'bold')
+						 .style('font-size','22px')
+                         .style('padding', '3px')
+                         .style('color', 'white')
+                        // .style('border-radius', '2px')
+                         .on("click", function () {
+                             window.location = "\matrix_3.html";
                          })
 						 .on("mouseover", function(d){
 							d3.select(this).style("cursor","pointer");
@@ -654,9 +777,19 @@ function stopAnimation()
 	d3.selectAll("path").style("stroke-width",2); 
 	d3.selectAll("path").style("opacity",0.6); 
 }
+function svgremove()
+{
+		svg.selectAll('*').remove();
+		d3.select("#btnStartAnimation").remove();
+	    d3.select("#btnStopAnimation").remove();
+		d3.select("#btnMatrixView").remove();
+		
+		svg.selectAll('*').remove();
+		displaytime();
+}
 function displaytime()
 {
-	svg.selectAll("*").remove();
+	svg.selectAll('*').remove();	
 	console.log(svg);
 	times=[];
 	filenames=[];
@@ -672,8 +805,8 @@ function displaytime()
 	}
 	timetextcoordver=[];
 	var timeinitialver=30;
-	timexcoord1=80;
-	timexcoord2=330;
+	timexcoord1=200;
+	timexcoord2=450;
 	var timeinitialx1=timexcoord1;
 	var timeinitialx2=timexcoord2;
 	var start=0;
@@ -698,7 +831,7 @@ function displaytime()
 		temp.push(timeinitialver);
 		temp.push(parseInt(times[i-1])+10);
 		timetextcoordver.push(temp);
-		timeinitialx1=timeinitialx1+380;
+		timeinitialx1=timeinitialx1+480;
 		timeinitialx2=timeinitialx1+250;
 	}
 	console.log("func call");
@@ -706,30 +839,13 @@ function displaytime()
 }
 function displayaspertime(times)
 {
-	console.log(times);
-	svg.selectAll(".rules")
-		.data(timetextcoordhor)
-		.enter()
-		.append("text")
-		.attr("class","rules")
-		.attr("x",function(d){ return d[0]+"px";})
-		.attr("y",function(d){ return d[1]+"px";})
-		.text(function(d,i){ return "Rule:"+(i+1) ;})
-		.attr("font-family", "sans-serif")
-		.attr("font-size", "20px")
-		.attr("fill", "black");
 
-	svg.selectAll(".time")
-		.data(timetextcoordver)
-		.enter()
-		.append("text")
-		.attr("class","time")
-		.attr("x",function(d){ return d[0]+"px";})
-		.attr("y",function(d){ return d[1]+"px";})
-		.text(function(d){ console.log("text"+d[2]);return d[2] ;})
-		.attr("font-family", "sans-serif")
-		.attr("font-size", "20px")
-		.attr("fill", "black");
+	console.log(times);
+
+	svg.selectAll('*').remove();
+	
+
+	
 	
 	for(k=0;k<=35;k++)
 	{
@@ -753,6 +869,20 @@ function readtimedata(times)
 }
 function timedisplay(data,xcoord3,xcoord4)
 {
+	svg.selectAll(".rules"+xcoord3)
+			.data(textcoordhor)
+			.enter()
+			.append("text")
+			.attr("class","rules"+xcoord3)
+			.attr("x",function(d){ return (xcoord3-165+"px");})
+			.attr("y",function(d){ return d[1]+"px";})
+			.text(function(d,i){ 
+				//return "Rule:"+(i+1);
+				return rulesArray[i];
+				})
+			.attr("font-family", "sans-serif")
+			.attr("font-size", "20px")
+			.attr("fill", "black");
 		starttime=data.bioBeginTime.toFixed();
 		//console.log(starttime);
 		endtime=data.bioEndTime.toFixed();
@@ -792,6 +922,19 @@ function timedisplay(data,xcoord3,xcoord4)
 		   .attr("y", function(index){ return ycoord+index*30 + "px";})
 		   .attr("width", 15 + "px")
 		   .attr("height", 20 + "px");
+
+		   svg.selectAll(".time")
+			.data(timetextcoordver)
+			.enter()
+			.append("text")
+			.attr("class","time")
+			.attr("x",function(d){ return d[0]+"px";})
+			.attr("y",function(d){ return d[1]+"px";})
+			.text(function(d){ return d[2] ;})
+			.attr("font-family", "sans-serif")
+			.attr("font-size", "20px")
+			.attr("fill", "black");
+
 		
 		var fluxes=data.fluxs;
 		//console.log("xccord3"+xcoord3);
@@ -818,8 +961,8 @@ function timedisplay(data,xcoord3,xcoord4)
 					var targety = d3.select("#rect"+j.toString()+xcoord4.toString()).attr('y');
 					targety = parseInt(targety.split("p")[0]);
 					//console.log("in file"+timefileindex+",targety"+targety);
-					coord.push(sourcex);
-					coord.push(sourcey);
+					coord.push(sourcex+15);
+					coord.push(sourcey+7.5);
 					coord.push(fluxes[i][j]);
 					if(fluxes[i][j]<0)
 					{
@@ -921,12 +1064,14 @@ function timedisplay(data,xcoord3,xcoord4)
 		if(timefileindex<times.length-1)
 		{	
 			console.log("in filenames"+timefileindex);
-			timexcoord1=timexcoord1+380;
+			timexcoord1=timexcoord1+480;
 			timexcoord2=timexcoord1+250;
 			timefileindex++;
 			readtimedata(times);
 		}
 }	
+
+
 
 </script>
 </body>
