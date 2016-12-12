@@ -23,14 +23,19 @@ Website of the Project:
 http://mfranc31.people.uic.edu/Project3/matrix_3.html
  
 Screenshots of Visualizations:
-1.	Matrix:
-  ![MatrixVisualization](https://github.com/francisminu/CS424_InteractiveVisualizationOfDynamicRuleNetworks/tree/master/Screenshots/matrix1.JPG)
+
+1. Matrix:
+![MatrixVisualization](https://github.com/francisminu/CS424_InteractiveVisualizationOfDynamicRuleNetworks/tree/master/Screenshots/matrix1.JPG)
+
 2.	Clustering of Rules   
- ![ClusteredRules](https://github.com/francisminu/CS424_InteractiveVisualizationOfDynamicRuleNetworks/tree/master/Screenshots/clustering.JPG)
+![ClusteredRules](https://github.com/francisminu/CS424_InteractiveVisualizationOfDynamicRuleNetworks/tree/master/Screenshots/clustering.JPG)
+
 3.	Filtered view  
 ![FilteredView](https://github.com/francisminu/CS424_InteractiveVisualizationOfDynamicRuleNetworks/tree/master/Screenshots/filtere_view.JPG)
+
 4.	Time Line 
- ![TimeLine](https://github.com/francisminu/CS424_InteractiveVisualizationOfDynamicRuleNetworks/tree/master/Screenshots/time_line.JPG)
+![TimeLine](https://github.com/francisminu/CS424_InteractiveVisualizationOfDynamicRuleNetworks/tree/master/Screenshots/time_line.JPG)
+
 5.	TimeLine for a particular rule
  ![SpecificRuleonTimeLine](https://github.com/francisminu/CS424_InteractiveVisualizationOfDynamicRuleNetworks/tree/master/Screenshots/time_line_filtered_view.JPG)
    
