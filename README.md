@@ -41,7 +41,7 @@ Screenshots of Visualizations:
  ![SpecificRuleonTimeLine](https://github.com/francisminu/CS424_InteractiveVisualizationOfDynamicRuleNetworks/tree/master/Screenshots/time_line_filtered_view.JPG)
  
  6. Comparison between various time intervals
- ![CompareTimeLine](https://github.com/francisminu/CS424_InteractiveVisualizationOfDynamicRuleNetworks/tree/master/Screenshots/Compare.JPG)
+ ![CompareTimeLine](https://github.com/francisminu/CS424_InteractiveVisualizationOfDynamicRuleNetworks/tree/master/Screenshots/Compare.png)
  
    
 By -Surbhi Arora -Minu Francis -Pooja Donekal -
