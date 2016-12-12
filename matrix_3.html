@@ -4,7 +4,7 @@
     <title></title>
     <style>
 #btn{
-	border-radius: 15px;
+	<!--border-radius: 15px;-->
 
 	display:block;
 	border-style:solid;
@@ -26,7 +26,7 @@
 }
 
 .ticks {
-  font: 10px sans-serif;
+  font: 100px sans-serif;
 }
 
 .track,
@@ -36,13 +36,15 @@
 }
 
 .track {
-  stroke: #000;
+  stroke: #5ab4ac;
+  fill:red;
   stroke-opacity: 0.3;
   stroke-width: 10px;
 }
 
 .track-inset {
-  stroke: #ddd;
+  stroke: #A9A9A9;
+  stroke-opacity: 0.5;
   stroke-width: 8px;
 }
 
@@ -53,9 +55,9 @@
 }
 
 .handle {
-  fill: #fff;
+  fill: #5ab4ac;
   stroke: #000;
-  stroke-opacity: 0.5;
+  stroke-opacity: 1;
   stroke-width: 1.25px;
 }
 
@@ -75,9 +77,19 @@
 //console.log(new_order[9]);
 var p = 0;
 var q = 0;
-var bla = 0;
+
+var colorText = ["0 - 9","10 - 99","100 - 999","1000 - 9999","10000 - 99999","100000 - 999999","1000000 - 9999999","10000000 - 99999999","100000000 - 999999999"];
+var poscolorScheme = [d3.hsl(100, 0.5, 0.9),d3.hsl(100, 0.5, 0.8),d3.hsl(100, 0.5, 0.7),d3.hsl(100, 0.5, 0.6),d3.hsl(100, 0.5, 0.5),d3.hsl(100, 0.5, 0.4),d3.hsl(100, 0.5, 0.3),d3.hsl(100, 0.5, 0.2),d3.hsl(100, 0.5, 0.1)];
+var negColorScheme = [d3.hsl(0, 0.5, 0.9),d3.hsl(0, 0.5, 0.8),d3.hsl(0, 0.5, 0.7),d3.hsl(0, 0.5, 0.6),d3.hsl(0, 0.5, 0.5),d3.hsl(0, 0.5, 0.4),d3.hsl(0, 0.5, 0.3),d3.hsl(0, 0.5, 0.2),d3.hsl(0, 0.5, 0.1)];			   
+var postiveColors = [d3.hsl(100, 0.5, 0.9),d3.hsl(100, 0.5, 0.8),d3.hsl(100, 0.5, 0.7),d3.hsl(100, 0.5, 0.6),d3.hsl(100, 0.5, 0.5),d3.hsl(100, 0.5, 0.4),d3.hsl(100, 0.5, 0.3),d3.hsl(100, 0.5, 0.2),d3.hsl(100, 0.5, 0.1)];
+var negativeColors = [d3.hsl(0, 0.5, 0.9),d3.hsl(0, 0.5, 0.8),d3.hsl(0, 0.5, 0.7),d3.hsl(0, 0.5, 0.6),d3.hsl(0, 0.5, 0.5),d3.hsl(0, 0.5, 0.4),d3.hsl(0, 0.5, 0.3),d3.hsl(0, 0.5, 0.2),d3.hsl(0, 0.5, 0.1)];
+
+var animation_flag=false;				   
+
+
+
 var counter = -1;
-var width = 2800, //2800
+var width = 3000, //2800
     height = 1150,/// 730, //1150
     div = d3.select('#chart'),
    
@@ -97,8 +109,9 @@ var width = 2800, //2800
 	.attr("id","borderRect")
     .attr("width", width)
     .attr("height", height)
-    //.attr("fill", "#C0C0C0")  
 	.attr("fill", "#e5f5f9")  
+	//.attr("fill", "black") #C0C0C0
+	
 	.attr("stroke-width","5px")
 	.attr("stroke","black");
 				
@@ -116,20 +129,26 @@ var filename = "flux_0";
 function order_reset(o_flag)
 {
 	order_flag = o_flag;
+	animation_flag=false;
 	loadFlux();
 }
 
 //order_reset(o_flag);
 function flag_reset(flag1)
 {
+	animation_flag=false;
 	flag = flag1;
 	loadFlux();
 }
 function flux_reset(filename1)
 {
+	animation_flag= true;
 	filename = filename1;
 	loadFlux();
+
 }
+
+loadFlux();
 
 function loadFlux()
 {
@@ -154,17 +173,19 @@ function ready(error,data)
 
 
 var rulesLength;
+var rulesData;
 function matrix(data)
 {
 	p=0;
 				rulesLength=data.rules.length;
 				
-				var horRulesLeftStart = 140;
-			var ruleText;
+				var horRulesLeftStart = 150;
+			var rulesText;
 			
 			d3.select('body').select('#gfilter').remove();
 			var gfilter = d3.select('body').append('g').attr("id","gfilter");
-			//	
+			rulesData = data.rules;
+			
 			for(var i=0;i<rulesLength;i++)
 			{
 				j=i+1;
@@ -181,6 +202,7 @@ function matrix(data)
 				}
 				j=j-1;
 				ruleText = data.rules[j];
+				//console.log(ruleText);
 				//ruleText ="Rule "+j;
 				gfilter.append('div')
                          .attr('id', 'RulesLabel')
@@ -188,19 +210,15 @@ function matrix(data)
                          .style('opacity', 1)
                          //.style('background-color', '#023858')
 						 .text(ruleText)
-						// .style("text-align","center")
+						.style("text-align","center")
                          .style('width', '70px')
 						 .style('height','20px')
                          .style("left", horRulesLeftStart+'px')
                          .style("top", "80px")
                          .style('line-height', 1)
                         .style('font-weight', 'bold')
-						.style("font-size","18px")
-                        // .style("font-family", "sans-serif")
-                        // .style("font-size", "15px")
-                         //.style("fill", "black")
-                        // .style('padding', '3px')
-                         //.style('color', '#000')
+						.style("font-size","15px")
+						.style("text-anchor","start")
 						 .style('color', 'black')
                          .style('border-radius', '2px');
 						 
@@ -274,7 +292,7 @@ function matrix(data)
 // them to the inner array (the inner array is already
 // binded to the group)
 	grp.selectAll("rect").remove();
-	grp.selectAll("rect")
+	 var rect1 =grp.selectAll("rect")
     .data(function(d) { return d; })
     .enter()
     .append('rect')
@@ -288,24 +306,29 @@ function matrix(data)
 		.style("stroke", strokeColor).attr("stroke-width","5")
         .on('mouseover', function(d) { d3.select(this)
                         .append("title").text(fillText(d));
-		})
-		
-		.attr("fill",fillColor).attr("transform","translate(110,100)")
-			  
-/*	.attr("fill","#ffffff") 
-		.transition()
-			.duration(100)
-			.delay(function (d, i) {
-				//console("The influence of Rule " + (p+1) + " on Rule " + (d+1) + " is " + data.fluxs[p][d]);
-				return i * 25;
-			})
-			.attr("fill",fillColor)*/
+		}).attr("transform","translate(110,100)")
+		.attr("fill",fillColor) 
 		.append("svg:title")
 		.text(fillText);
-	//	.attr("transform","translate(100,100)")
 		
-    
-		//.text(fillText);
+		/*console.log(animation_flag);
+		//.attr("fill",fillColor)
+		if (!animation_flag)
+		{
+		rect1.attr("fill","#e5f5f9") 
+		.transition()
+			.duration(50)
+			.delay(function (d, i) {
+				//console("The influence of Rule " + (p+1) + " on Rule " + (d+1) + " is " + data.fluxs[p][d]);
+				return i * 15;
+			})
+			.attr("fill",fillColor);
+		}
+		else
+		{
+			rect1.attr("fill",fillColor);
+		}
+		*/
 
 		function fillText(d)
 		{
@@ -317,7 +340,21 @@ function matrix(data)
 				else
 					d= new_order[d];
 			}
-			var textVal = "The influence of Rule " + (p+1) + " on Rule " + (d+1) + " is " + data.fluxs[p][d];
+				
+			var textVal;
+			if(data.fluxs[p][d] > 0)
+			{
+				textVal = "The rule " + rulesData[p] + " has a positive influence of " + data.fluxs[p][d] + " on the rule " + rulesData[d];
+			}
+			else if(data.fluxs[p][d] < 0)
+			{
+				textVal = "The rule " + rulesData[p] + " has a negative influence of " + data.fluxs[p][d] + " on the rule " + rulesData[d];
+			}
+			else
+			{
+				textVal = "The rule " + rulesData[p] + " has no influence on the rule " + rulesData[d];
+			}
+			//var textVal = "The influence of Rule " + rulesData[p] + " on Rule " + rulesData[d] + " is " + data.fluxs[p][d];
 			if(col == 20)
 			{
 				p = p + 1;
@@ -537,10 +574,104 @@ function matrix(data)
 			return cellHeight;
 		}
 		
+	
+	createLegend();
+		
 		
 }
 
 
+
+function createLegend()
+{
+	
+	
+	d3.select('body').append('div')
+                         .attr('id', 'legendHeader')
+                         .style('position', 'absolute')
+                         .style('opacity', 1)
+                         .text("Influence Values (Positive) ")
+						 .style("text-align","center")
+                         .style('width', '300px')
+                         .style("left", "2650px")
+                         .style("top", "50px")
+                         .style('line-height', 1)
+                         .style('font-weight', 'bold')
+						 .style("font-size","25px")
+                         .style('padding', '3px')
+                         .style('color', 'green')
+                         .style('border-radius', '2px');
+	
+	
+	var legend = svg.selectAll("legend")
+    .data(postiveColors)
+    .enter().append("g")
+    .attr("id","initialLegend")
+    .attr("class", "legend")
+    .attr("transform", function(d, i) { return "translate(900," + i * 40  + ")"; });
+    
+	legend.append("rect")
+    .attr("x", width-120)
+    .attr("width", 45)
+    .attr("height", 25)
+	.style("stroke","green")
+	.attr("stroke-width","5")
+    .style("fill", function(d,i){ return poscolorScheme[i]; })
+	.attr("transform","translate(-10,80)"); 
+    
+	legend.append("text")
+    .attr("x", width - 60)
+    .attr("y", 15)
+    .attr("dy", ".25em")
+	.attr("fill","black")
+    .style("text-anchor", "start")
+	.style("font-size","25px")
+    .text(function(d,i) { return colorText[i]; })
+	.attr("transform","translate(-10,80)");
+	
+	d3.select('body').append('div')
+                         .attr('id', 'legendHeader')
+                         .style('position', 'absolute')
+                         .style('opacity', 1)
+                         .text("Influence Values (Negative) ")
+						 .style("text-align","center")
+                         .style('width', '300px')
+                         .style("left", "2650px")
+                         .style("top", "450px")
+                         .style('line-height', 1)
+                         .style('font-weight', 'bold')
+						 .style("font-size","25px")
+                         .style('padding', '3px')
+                         .style('color', 'red')
+                         .style('border-radius', '2px');
+	
+	
+	var legend = svg.selectAll("legend")
+    .data(negativeColors)
+    .enter().append("g")
+    .attr("id","initialLegend")
+    .attr("class", "legend")
+    .attr("transform", function(d, i) { return "translate(900," + i * 40  + ")"; });
+    
+	legend.append("rect")
+    .attr("x", width-120)
+    .attr("width", 45)
+    .attr("height", 25)
+	.style("stroke","red")
+	.attr("stroke-width","5")
+    .style("fill", function(d,i){ return negColorScheme[i]; })
+	.attr("transform","translate(-10,500)"); 
+    
+	legend.append("text")
+    .attr("x", width - 60)
+    .attr("y", 15)
+    .attr("dy", ".25em")
+	.attr("fill","black")
+    .style("text-anchor", "start")
+	.style("font-size","25px")
+    .text(function(d,i) { return colorText[i]; })
+	.attr("transform","translate(-10,500)");
+}
 
 
 
